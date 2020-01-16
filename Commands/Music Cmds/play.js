@@ -71,7 +71,10 @@ module.exports = {
             connection: await message.member.voiceChannel.join(),
             queue: [],
             guildID: message.guild.id,
-            channel: message.channel
+            channel: message.channel,
+            loopQueue: false,
+            loopSong: false,
+            playedLoopedSong: null 
           };
           client.queue.set(message.guild.id, data);
         }
@@ -87,13 +90,13 @@ module.exports = {
           play(client, data, message);
         } else {
           message.channel.send(
-            `**Succesfully added:** ${info.title} to the queue, requested from ${message.author.tag}`
+            `**Succesfully added:** ${info.title} to the queue, Requested from ${message.author.tag}`
           );
         }
         client.queue.set(message.guild.id, data);
       });
     }
-    
+
   }
 };
 
@@ -101,7 +104,7 @@ async function play(client, data, message) {
   let playing = new Discord.RichEmbed();
   playing.setTitle("Now playing");
   playing.setDescription(
-    `Now playing [${data.queue[0].songTitle}](${data.queue[0].url}) requested by ${data.queue[0].requester.tag}`
+    `Now playing [${data.queue[0].songTitle}](${data.queue[0].url}) Requested by ${data.queue[0].requester.tag}`
   );
   playing.setFooter(
     `Requested by ${data.queue[0].requester.username}`,
@@ -119,15 +122,21 @@ async function play(client, data, message) {
 }
 
 async function finish(client, data, message) {
-  data.queue.shift();
-  if (data.queue.length > 0) {
-    client.queue.set(data.guildID, data);
-    play(client, data, message);
-  } else {
-    try {
-      message.guild.channels.get(data.guildID).me.voiceChannel.leave();
-    } catch (e) {
-      return;
+
+  if(data.loopQueue == false){
+    data.queue.shift();
+    if (data.queue.length > 0) {
+      client.queue.set(data.guildID, data);
+      play(client, data, message);
+    } else {
+      try {
+        message.guild.channels.get(data.guildID).me.voiceChannel.leave();
+      } catch (e) {
+        return;
+      }
     }
+  } else if(data.loopQueue == true){
+    play(client, data, message)
   }
+  
 }
