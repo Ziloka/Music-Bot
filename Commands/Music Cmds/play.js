@@ -7,6 +7,7 @@ module.exports = {
   usage: "play <song name or url>",
   argRequirements: args => !args.length,
   run: async (client, message, args) => {
+
     if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
       let info = await ytdl.getInfo(args.join(' '))
     if(info == undefined) return message.channel.send('That is not a valid song url')
@@ -92,6 +93,7 @@ module.exports = {
         client.queue.set(message.guild.id, data);
       });
     }
+    
   }
 };
 
