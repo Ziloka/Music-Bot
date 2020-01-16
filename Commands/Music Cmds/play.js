@@ -8,6 +8,50 @@ module.exports = {
   argRequirements: args => !args.length,
   run: async (client, message, args) => {
     if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
+      let info = await ytdl.getInfo(args.join(' '))
+    if(info == undefined) return message.channel.send('That is not a valid song url')
+    let data = client.queue.get(message.guild.id)
+    
+    if(!data){
+          data = {
+            connection: await message.member.voiceChannel.join(),
+            queue: [],
+            guildID: message.guild.id,
+            voiceChannel: message.member.voiceChannel,
+            channel: message.channel
+          }
+          client.queue.set(message.guild.id, data)
+        }
+        
+        data.queue.push({
+          songTitle: info.title,
+          requester: message.author,
+          url: args.join(' '),
+          voiceChannel: message.member.voiceChannel,
+          announceChannel: message.channel
+        })
+        
+        if(!data.dispatcher){
+          play(client, data, message);
+        } else {
+          let queueConstruction = {
+            songs: []
+          }
+        }
+        if(data.queue.length > 1){
+          
+          let addedToQueue = new Discord.RichEmbed()
+          addedToQueue.setTitle('Added to Queue')
+          addedToQueue.setDescription(`Added: (${data.queue[data.queue.length - 1].songTitle})[${data.queue[data.queue.legnth - 1].url}] Requested by: ${data.queue[data.queue.length - 1].requester}`)
+          addedToQueue.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL)
+          message.channel.send({embed: addedToQueue})
+          
+        }
+        
+        client.queue.set(message.guild.id, data)
+        
+        let playSong = new Discord.RichEmbed()
+        playSong.setDescription(`Queued ${info.title} from ${message.author.username}#${message.author.discriminator}`)
     } else {
       if (message.member.voiceChannel == undefined)
         return message.channel.send(
