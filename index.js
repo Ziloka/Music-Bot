@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const klaw = require('klaw');
 const fileSync = require('fs-sync');
-const {prefix} = require('./botconfig.json');
+const {prefix, developers} = require('./botconfig.json');
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -13,5 +13,6 @@ client.login(process.env.TOKEN)
 
 module.exports = {
     client: client,
-    prefix: prefix
+    prefix: prefix,
+    developers: developers
 }

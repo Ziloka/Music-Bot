@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const {developers} = require('./../../index.js');
 
 module.exports = {
     name: "eval",
@@ -6,11 +7,14 @@ module.exports = {
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
+    if(developers.find(ID => ID == message.author.id) == undefined) return;
+
     try{
-        let evaluateThis = args.join(' ');
+    let evaluateThis = args.join(' ');
     let evaulation = eval(evaluateThis);
     let evaled = new Discord.RichEmbed();
     evaled.setTitle('Evaluation')
+    evaled.setColor('#CDDC39')
     evaled.addField('Input', `\`\`\`js
 ${evaluateThis}\`\`\``)
     evaled.addField('Output', `\`\`\`js

@@ -12,7 +12,6 @@ module.exports = {
             let newArray = [];
             let currentSong = client.queue.get(message.guild.id).queue[0]
             client.queue.get(message.guild.id).queue = newArray.push(currentSong)
-            console.log(client.queue.get(message.guild.id).queue)
             return message.channel.send('Succesfully looped the song forever')
         } else if(option == 'queue'){
             client.queue.get(message.guild.id).loopQueue = true
