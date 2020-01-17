@@ -11,9 +11,14 @@ module.exports = {
         if(option == 'song'){
             let currentSong = client.queue.get(message.guild.id).queue[0]
             client.queue.get(message.guild.id).queue = [].push(currentSong)
+            client.queue.get(message.guild.id).loopSong = true
             return message.channel.send('Succesfully looped the song forever')
         } else if(option == 'queue'){
+            //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+            let currentSongs = [...client.queue.get(message.guild.id).queue]
             client.queue.get(message.guild.id).loopQueue = true
+
+            client.queue.get(message.guild.id).playQueueSongs = currentSongs.slice()
             return message.channel.send('Succesfully looped the queue')
         }
 

@@ -8,101 +8,74 @@ module.exports = {
   argRequirements: args => !args.length,
   run: async (client, message, args) => {
 
+    if(message.member.voiceChannel == undefined) return message.channel.send("Join a voice channel to use this command!");
+    if(args.join(' ') == undefined) return message.channel.send('Use a keyword or a url!');
+
     if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
-      let info = await ytdl.getInfo(args.join(' '))
-    if(info == undefined) return message.channel.send('That is not a valid song url')
-    let data = client.queue.get(message.guild.id)
-    
-    if(!data){
-          data = {
-            connection: await message.member.voiceChannel.join(),
-            queue: [],
-            guildID: message.guild.id,
-            voiceChannel: message.member.voiceChannel,
-            channel: message.channel
-          }
-          client.queue.set(message.guild.id, data)
-        }
-        
-        data.queue.push({
-          songTitle: info.title,
-          requester: message.author,
-          url: args.join(' '),
-          voiceChannel: message.member.voiceChannel,
-          announceChannel: message.channel
-        })
-        
-        if(!data.dispatcher){
-          play(client, data, message);
-        } else {
-          let queueConstruction = {
-            songs: []
-          }
-        }
-        if(data.queue.length > 1){
-          
-          let addedToQueue = new Discord.RichEmbed()
-          addedToQueue.setTitle('Added to Queue')
-          addedToQueue.setDescription(`Added: (${data.queue[data.queue.length - 1].songTitle})[${data.queue[data.queue.legnth - 1].url}] Requested by: ${data.queue[data.queue.length - 1].requester}`)
-          addedToQueue.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL)
-          message.channel.send({embed: addedToQueue})
-          
-        }
-        
-        client.queue.set(message.guild.id, data)
-        
-        let playSong = new Discord.RichEmbed()
-        playSong.setDescription(`Queued ${info.title} from ${message.author.username}#${message.author.discriminator}`)
+      if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
+      let url = args.join(' ');
+      let data = client.queue.get(message.guild.id)
+      let info = await ytdl.getInfo(url)
+      return addToQueue(client, message, args, info, data, url)
     } else {
-      if (message.member.voiceChannel == undefined)
-        return message.channel.send(
-          "Join a voice channel to use this command!"
-        );
-      yt(args.join(" "), async (err, res) => {
-        if (err)
-          return message.channel.send("An error occurred, please try again!");
-        let video = res.videos[0];
-        let url = video.url;
-        let info = await ytdl.getInfo(url);
-        let data = client.queue.get(message.guild.id);
-
-        if (data == undefined) {
-          data = {
-            connection: await message.member.voiceChannel.join(),
-            queue: [],
-            guildID: message.guild.id,
-            channel: message.channel,
-            loopQueue: false,
-            loopSong: false,
-            playedLoopedSong: null 
-          };
-          client.queue.set(message.guild.id, data);
-        }
-
-        data.queue.push({
-          songTitle: info.title,
-          requester: message.author,
-          url: url,
-          announceChannel: message.channel
-        });
-
-        if (!data.dispatcher) {
-          play(client, data, message);
-        } else {
-          message.channel.send(
-            `**Succesfully added:** ${info.title} to the queue, Requested from ${message.author.tag}`
-          );
-        }
-        client.queue.set(message.guild.id, data);
-      });
+      return searchYT(client, message, args)
     }
 
   }
 };
 
+async function searchYT(client, message, args){
+
+  yt(args.join(" "), async (err, res) => {
+    if (err)
+      return message.channel.send("An error occurred, please try again!");
+    let video = res.videos[0];
+    let url = video.url;
+    let info = await ytdl.getInfo(url);
+    let data = client.queue.get(message.guild.id); 
+    addToQueue(client, message, args, info, data, url)
+  });
+
+}
+
+async function addToQueue(client, message, args, info, data, url){
+
+  if (data == undefined) {
+    data = {
+      connection: await message.member.voiceChannel.join(),
+      queue: [],
+      guildID: message.guild.id,
+      channel: message.channel,
+      loopQueue: false,
+      loopSong: false,
+      playedLoopedSong: null,
+      playQueueSongs: []
+    };
+    client.queue.set(message.guild.id, data);
+  }
+
+  data.queue.push({
+    songTitle: info.title,
+    requester: message.author,
+    url: url,
+    announceChannel: message.channel
+  });
+
+  if (!data.dispatcher) {
+    play(client, data, message);
+  } else {
+    message.channel.send(
+      `**Succesfully added:** ${info.title} to the queue, Requested from ${message.author.tag}`
+    );
+  }
+  client.queue.set(message.guild.id, data);
+
+}
+
 async function play(client, data, message) {
-  let playing = new Discord.RichEmbed();
-  playing.setTitle("Now playing");
+  try{
+    let playing = new Discord.RichEmbed();
+  playing.setTitle(`Now playing`);
   playing.setDescription(
     `Now playing [${data.queue[0].songTitle}](${data.queue[0].url}) Requested by ${data.queue[0].requester.tag}`
   );
@@ -119,23 +92,36 @@ async function play(client, data, message) {
   data.dispatcher.on("end", () => {
     finish(client, data, message);
   });
+  }catch(e){
+    return;
+  }
 }
 
 async function finish(client, data, message) {
 
   if(data.loopQueue == false){
-    data.queue.shift();
-    if (data.queue.length > 0) {
-      client.queue.set(data.guildID, data);
-      play(client, data, message);
-    } else {
-      try {
-        message.guild.channels.get(data.guildID).me.voiceChannel.leave();
-      } catch (e) {
-        return;
+    if(data.loopSong == false){
+      if (data.queue.length > 0){
+        data.queue.shift();
+        client.queue.set(data.guildID, data);
+        play(client, data, message);
+      } else {
+        try {
+          message.guild.channels.get(data.guildID).me.voiceChannel.leave();
+        } catch (e) {
+          return;
+        }
       }
+    } else {
+      play(client, data, message)
     }
   } else if(data.loopQueue == true){
+    // has issue here
+    let currentSongs = data.playQueueSongs
+    data.queue.shift()
+    if(data.queue.length == 0) data.queue.push(currentSongs);
+    //undefined
+    data.queue = data.queue[0]
     play(client, data, message)
   }
   

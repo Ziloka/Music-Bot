@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 module.exports = {
     name: "join",
     usage: "join",
-    argsRequirements: args => !!args.length,
+    argRequirements: args => !!args.length,
     run: async (client, message, args) => {
 
         if(message.guild.members.get(client.user.id).voiceChannel != undefined) return message.channel.send('Wait your turn!')
