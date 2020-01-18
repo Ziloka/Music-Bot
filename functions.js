@@ -14,7 +14,7 @@ module.exports = (client, klaw, fileSync) => {
             client.commands.set(prop.name, prop)
             if(prop.aliases == undefined) return;
             prop.aliases.forEach(alias => {
-                client.aliases.set(alias, prop.name)
+                client.aliases.set(alias, prop)
             })
         })
     })

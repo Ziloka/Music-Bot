@@ -3,7 +3,7 @@ const ytdl = require("ytdl-core");
 const yt = require("yt-search");
 
 module.exports = {
-  name: "seach",
+  name: "search",
   usage: "search <song name or url>",
   argRequirements: args => !args.length,
   run: async (client, message, args) => {
@@ -56,7 +56,7 @@ module.exports = {
           let videoNum = parseInt(response.first().content);
           let wantedVideo = res.videos[videoNum - 1];
           let info = await ytdl.getInfo(wantedVideo.url);
-          let data = bot.queue.get(message.guild.id);
+          let data = client.queue.get(message.guild.id);
 
           if (!data) {
             data = {
@@ -66,7 +66,7 @@ module.exports = {
               voiceChannel: message.member.voiceChannel,
               channel: message.channel
             };
-            bot.queue.set(message.guild.id, data);
+            client.queue.set(message.guild.id, data);
           }
 
           data.queue.push({
@@ -78,7 +78,7 @@ module.exports = {
           });
 
           if (!data.dispatcher) {
-            play(bot, data, message);
+            play(client, data, message);
           } else {
             let queueConstruction = {
               songs: []
@@ -99,7 +99,7 @@ module.exports = {
             message.channel.send({ embed: addedToQueue });
           }
 
-          bot.queue.set(message.guild.id, data);
+          client.queue.set(message.guild.id, data);
 
           let playSong = new Discord.RichEmbed();
           playSong.setDescription(

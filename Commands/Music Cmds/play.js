@@ -55,7 +55,7 @@ async function addToQueue(client, message, args, info, data, url){
   }
 
   data.queue.push({
-    songTitle: info.title,
+    songTitle: Discord.Util.escapeMarkdown(info.title),
     requester: message.author,
     url: url,
     announceChannel: message.channel
@@ -88,11 +88,13 @@ async function play(client, data, message) {
   data.dispatcher = await data.connection.playStream(
     ytdl(data.queue[0].url, { filter: "audioonly" })
   );
+  data.dispatcher.setVolume(0.1)
   data.dispatcher.guildID = data.guildID;
   data.dispatcher.on("end", () => {
     finish(client, data, message);
   });
   }catch(e){
+    console.log(e)
     return;
   }
 }
@@ -100,14 +102,19 @@ async function play(client, data, message) {
 async function finish(client, data, message) {
 
   if(data.loopQueue == false){
+    console.log(`${data.queue[0].songTitle}: is song looped?\n${data.loopSong == false}`)
     if(data.loopSong == false){
+      console.log(data.queue.length)
       if (data.queue.length > 0){
         data.queue.shift();
+        console.log(data.queue)
         client.queue.set(data.guildID, data);
         play(client, data, message);
       } else {
         try {
+          console.log('gets here')
           message.guild.channels.get(data.guildID).me.voiceChannel.leave();
+          client.queue.delete(message.guild.id);
         } catch (e) {
           return;
         }
