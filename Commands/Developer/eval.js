@@ -12,8 +12,7 @@ module.exports = {
     if(developers.find(ID => ID == message.author.id) == undefined) return;
 
     let evaluateThis = args.join(' ');
-    let evaluation = eval(evaluateThis);
-    evaluation = util.inspect(evaluation)
+    let evaluation = util.inspect(eval(evaluateThis))
 
     try{
     let evaled = new Discord.RichEmbed();
