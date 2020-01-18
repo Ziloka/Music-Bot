@@ -11,7 +11,8 @@ module.exports = {
 
     if(developers.find(ID => ID == message.author.id) == undefined) return;
 
-    let evaluateThis = args.join(' ');
+    try{
+        let evaluateThis = args.join(' ');
     let evaluation = util.inspect(eval(evaluateThis))
 
     try{
@@ -50,6 +51,9 @@ ${typeof evaluation}\`\`\``)
         } else {
             return message.channel.send(e.message)
         }
+    }
+    }catch(e){
+        return message.channel.send(e.message)
     }
 
     }
