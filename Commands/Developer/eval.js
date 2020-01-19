@@ -5,6 +5,7 @@ const {developers} = require('./../../index.js');
 
 module.exports = {
     name: "eval",
+    category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
     usage: "eval <code>",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {

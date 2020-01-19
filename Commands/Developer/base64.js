@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
 const Base64 = require('js-base64').Base64;
 const {developers} = require('./../../index.js');
+const path = require('path')
 
 module.exports = {
     name: "base64",
+    category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 

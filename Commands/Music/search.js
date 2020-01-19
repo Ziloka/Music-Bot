@@ -5,6 +5,7 @@ const yt = require("yt-search");
 module.exports = {
   name: "search",
   usage: "search <song name or url>",
+  category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
   blackListed: true,
   argRequirements: args => !args.length,
   run: async (client, message, args) => {

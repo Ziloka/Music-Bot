@@ -3,6 +3,7 @@ const klaw = require('klaw');
 const fileSync = require('fs-sync');
 const {prefix, developers} = require('./botconfig.json');
 const client = new Discord.Client();
+client.categories = [];
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.queue = new Discord.Collection();
