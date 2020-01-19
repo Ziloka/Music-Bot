@@ -5,30 +5,71 @@ const yt = require("yt-search");
 module.exports = {
   name: "play",
   usage: "play <song name or url>",
+  aliases: ['search'],
   argRequirements: args => !args.length,
-  run: async (client, message, args) => {
+  run: async (client, message, args, matchedPrefix) => {
 
     if(message.member.voiceChannel == undefined) return message.channel.send("Join a voice channel to use this command!");
     if(args.join(' ') == undefined) return message.channel.send('Use a keyword or a url!');
 
-    if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
-      if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
-      let url = args.join(' ');
-      let data = client.queue.get(message.guild.id)
-      let info = await ytdl.getInfo(url)
-      return addToQueue(client, message, args, info, data, url)
+    let someArgs = message.content.slice(matchedPrefix.length).trim().split(/ +/);
+    let command = someArgs.shift().toLowerCase();
+
+    if(command == "search"){
+      return searchYTMultipleVideos(client, message, args)
     } else {
-      return searchYT(client, message, args)
+      if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
+        if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
+        let url = args.join(' ');
+        let data = client.queue.get(message.guild.id)
+        let info = await ytdl.getInfo(url)
+        return addToQueue(client, message, args, info, data, url)
+      } else {
+        return searchYTOnce(client, message, args)
+      }
     }
 
   }
 };
 
-async function searchYT(client, message, args){
+async function searchYTMultipleVideos(client, message, args){
+  
+  yt(args.join(' '), async (err, res) => {
+    if(err) return message.channel.send('An error occurred, please try again!')
+    try{
+      let videos = res.videos.slice(0,10)
+    let videoEmbed = new Discord.RichEmbed()
+    videoEmbed.setTitle(`Results for ${args.join(' ')}`)
+    videoEmbed.setDescription(`${videos.map((song, index) => `${index+1}: [${song.title}](https://youtube.com/${song.url})`).join('\n')}`)
+    videoEmbed.addField('You have 20 seconds to choose a song!', 'Type `cancel` to cancel the song selection!')
+    videoEmbed.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL)
+    message.channel.send({embed: videoEmbed})
+
+    let response = await message.channel.awaitMessages(message2 => message2.author === message.author && /10|[0-9]|cancel/.test(message2.content), {
+      time: 20000,
+      max: 1,
+      maxProcessed: 1,
+      errors: ['time']
+    })
+
+    let videoNum = parseInt(response.first().content);
+    let wantedVideo = res.videos[videoNum - 1];
+    let url = wantedVideo.url
+    let info = await ytdl.getInfo(wantedVideo.url);
+    let data = client.queue.get(message.guild.id)
+    addToQueue(client, message, args, info, data, url)
+    }catch(e){
+      console.log(e)
+      message.channel.send('Sorry something went wrong')
+    }
+  })
+
+}
+
+async function searchYTOnce(client, message, args){
 
   yt(args.join(" "), async (err, res) => {
-    if (err)
-      return message.channel.send("An error occurred, please try again!");
+    if (err) return message.channel.send("An error occurred, please try again!");
     let video = res.videos[0];
     let url = video.url;
     let info = await ytdl.getInfo(url);

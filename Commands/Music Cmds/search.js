@@ -5,6 +5,7 @@ const yt = require("yt-search");
 module.exports = {
   name: "search",
   usage: "search <song name or url>",
+  blackListed: true,
   argRequirements: args => !args.length,
   run: async (client, message, args) => {
     let options = {
@@ -21,16 +22,7 @@ module.exports = {
         let videos = res.videos.slice(0, 10);
         let videosSelectionEmbed = new Discord.RichEmbed();
         videosSelectionEmbed.setTitle(`Results for ${options.query}`);
-        videosSelectionEmbed.setDescription(
-          `${videos
-            .map(
-              (video, index) =>
-                `${index + 1} - [${video.title}](https://youtube.com/${
-                  video.url
-                })`
-            )
-            .join("\n")}`
-        );
+        videosSelectionEmbed.setDescription(`${videos.map((video, index) => `${index + 1} - [${video.title}](https://youtube.com/${ video.url})`).join("\n")}`);
         videosSelectionEmbed.addField(
           `You have 20 seconds to choose a video!`,
           `Type cancel to cancel the video selection!`
@@ -61,10 +53,14 @@ module.exports = {
           if (!data) {
             data = {
               connection: await message.member.voiceChannel.join(),
+              voiceChannel: message.member.voiceChannel,
               queue: [],
               guildID: message.guild.id,
-              voiceChannel: message.member.voiceChannel,
-              channel: message.channel
+              channel: message.channel,
+              loopQueue: false,
+              loopSong: false,
+              playedLoopSong: null,
+              playQueueSongs: []
             };
             client.queue.set(message.guild.id, data);
           }

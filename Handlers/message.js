@@ -16,6 +16,6 @@ client.on('message', async message => {
     if(!commandfile) commandfile = client.aliases.get(command)
     if(commandfile == undefined) return;
     if(commandfile.argRequirements(args) == true) return message.channel.send(`Correct usage is **${prefix}${commandfile.usage}**`)
-    if(commandfile) commandfile.run(client, message, args)
+    if(commandfile) commandfile.run(client, message, args, matchedPrefix)
 
 })
