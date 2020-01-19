@@ -5,8 +5,8 @@ const {developers} = require('./../../index.js');
 
 module.exports = {
     name: "eval",
-    category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
     usage: "eval <code>",
+    category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
@@ -36,7 +36,7 @@ ${typeof evaluation}\`\`\``)
             }
             let res = await fetch(`${options.url}/documents`, {
                 method: "POST",
-                body: evaluation.slice(8),
+                body: evaluation,
                 headers: { "Content-Type": "text/plain" }
             })
             if(!res.ok) message.channel.send(res.statusText)

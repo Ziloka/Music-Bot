@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = {
     name: "base64",
-    category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
+    category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 

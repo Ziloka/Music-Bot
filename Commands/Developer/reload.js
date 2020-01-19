@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 
 module.exports = {
     name: "reload",
-    client: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
+    client: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => true,
     run: async (client, message, args) => {
 

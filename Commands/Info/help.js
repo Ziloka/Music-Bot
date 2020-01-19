@@ -3,14 +3,14 @@ const Discord = require('discord.js');
 module.exports = {
     name: "help",
     usage: "help",
-    category: client => __filename.slice(__filename.search(client.categories.find(categoryName => __filename.includes(categoryName)))).split('\\')[0],
+    category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => !!args.length,
     run: async (client, message, args, matchedPrefix) => {
 
         if(client.categories.find(category => category == args[0]) != undefined){
             let categoryEmbed = new Discord.RichEmbed()
             categoryEmbed.setTitle(`${args[0]} Commands`)
-            client.commands.values().filter()
+            let commands = client.commands.values().filter(category => category.category(client) == args[0])
         } else {
             let helpEmbed = new Discord.RichEmbed()
             helpEmbed.setTitle('Command Categories')
