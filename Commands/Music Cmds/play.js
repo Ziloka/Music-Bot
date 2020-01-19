@@ -43,6 +43,7 @@ async function addToQueue(client, message, args, info, data, url){
   if (data == undefined) {
     data = {
       connection: await message.member.voiceChannel.join(),
+      voiceChannel: message.member.voiceChannel,
       queue: [],
       guildID: message.guild.id,
       channel: message.channel,
@@ -102,20 +103,17 @@ async function play(client, data, message) {
 async function finish(client, data, message) {
 
   if(data.loopQueue == false){
-    console.log(`${data.queue[0].songTitle}: is song looped?\n${data.loopSong == false}`)
     if(data.loopSong == false){
-      console.log(data.queue.length)
-      if (data.queue.length > 0){
+      if (data.queue.length > 1){
         data.queue.shift();
-        console.log(data.queue)
         client.queue.set(data.guildID, data);
         play(client, data, message);
       } else {
         try {
-          console.log('gets here')
-          message.guild.channels.get(data.guildID).me.voiceChannel.leave();
+          message.guild.channels.get(data.voiceChannel.id).leave();
           client.queue.delete(message.guild.id);
         } catch (e) {
+          console.log(e)
           return;
         }
       }

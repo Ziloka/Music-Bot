@@ -11,6 +11,7 @@ module.exports = (client, klaw, fileSync) => {
             if(file.endsWith('.js') == false) return;
             if(fileSync.isDir(file) == true) return;
             let prop = require(file)
+            prop.path = file
             client.commands.set(prop.name, prop)
             if(prop.aliases == undefined) return;
             prop.aliases.forEach(alias => {
