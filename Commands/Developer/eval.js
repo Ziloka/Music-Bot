@@ -14,20 +14,21 @@ module.exports = {
 
     try{
         let evaluateThis = args.join(' ');
-    let evaluation = util.inspect(eval(evaluateThis))
+        let evaluation = util.inspect(eval(evaluateThis))
+        let hrStart = process.hrtime()
+        let hrDiff = process.hrtime(hrStart)
 
-    try{
-    let evaled = new Discord.RichEmbed();
-    evaled.setTitle('Evaluation')
-    evaled.setColor('#CDDC39')
-    evaled.addField('Input', `\`\`\`js
-${evaluateThis}\`\`\``)
-    evaled.addField('Output', `\`\`\`js
-${evaluation}\`\`\``)
-    evaled.addField('Type', `\`\`\`js
-${typeof evaluation}\`\`\``)
-    evaled.setFooter(`Evaluated by ${message.author.username}`, message.author.displayAvatarURL)
-    return message.channel.send({embed: evaled})
+        try{
+            let evaled = new Discord.RichEmbed();
+            evaled.setTitle('Evaluation')
+            evaled.setColor('#CDDC39')
+            evaled.addField('Input', `\`\`\`js\n${evaluateThis}\`\`\``)
+            evaled.addField('Output', `\`\`\`js\n${evaluation}\`\`\``)
+            evaled.addField('Type', `\`\`\`js\n${typeof evaluation}\`\`\``)
+            evaled.addField('Time it takes to evaulate code', `${hrDiff[0] > 0 ? `${hrDiff[0]}s` : ''}${hrDiff[1]/1000000}ms`)
+            evaled.setFooter(`Evaluated by ${message.author.username}`, message.author.displayAvatarURL)
+            // message.channel.send(`*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s`:''}${hrDiff[1]/1000000}`)
+            return message.channel.send({embed: evaled})
     }catch(e){
         if(e.message == "RichEmbed field values may not exceed 1024 characters."){
             let options = {
