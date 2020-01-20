@@ -1,9 +1,9 @@
 const Discord = require('discord.js')
 const tesseract = require('tesseract.js');
-const {developers} = require('./../../index.js');
+const {developers} = require('../../index.js');
 
 module.exports = {
-    name: "tesseract",
+    name: "ocr",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => !!args.length,
     run: async (client, message, args) => {

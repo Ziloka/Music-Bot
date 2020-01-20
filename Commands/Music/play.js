@@ -131,7 +131,7 @@ async function play(client, data, message) {
   data.dispatcher = await data.connection.playStream(
     ytdl(data.queue[0].url, { filter: "audioonly" })
   );
-  data.dispatcher.setVolume(0.1)
+  data.dispatcher.setVolume(1)
   data.dispatcher.guildID = data.guildID;
   data.dispatcher.on("end", () => {
     finish(client, data, message);
