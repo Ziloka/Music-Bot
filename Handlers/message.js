@@ -1,5 +1,6 @@
-const {client, prefix} = require('./../index.js');
+const {client, prefix} = require('./../bot.js');
 const Discord = require('discord.js');
+// console.log(client)
 
 let escapeRegex = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 client.on('message', async message => {

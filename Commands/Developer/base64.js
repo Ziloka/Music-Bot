@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const Base64 = require('js-base64').Base64;
-const {developers} = require('./../../index.js');
+const {developers} = require('../../bot.js');
 const path = require('path')
 
 module.exports = {

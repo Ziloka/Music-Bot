@@ -1,7 +1,7 @@
-const {client} = require('../../index.js');
+const {client} = require('../../bot.js');
 
 client.on('ready', async () => {
 
-    console.log(`${client.user.username} is online! \n${client.user.username}'s ID is ${client.user.id}`)
+    console.log(`${client.user.username} is online!`)
     
 })

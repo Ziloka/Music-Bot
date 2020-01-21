@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const {developers} = require('../../index.js');
+const {developers} = require('../../bot.js');
 
 module.exports = {
     name: "setavatar",

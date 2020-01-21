@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const util = require('util');
 const fetch = require('node-fetch');
-const {developers} = require('./../../index.js');
+const {developers} = require('../../bot.js');
 
 module.exports = {
     name: "eval",
@@ -14,7 +14,7 @@ module.exports = {
 
     try{
         let evaluateThis = args.join(' ');
-        let evaluation = util.inspect(eval(evaluateThis))
+        let evaluation = await util.inspect(eval(evaluateThis))
         let hrStart = process.hrtime()
         let hrDiff = process.hrtime(hrStart)
 

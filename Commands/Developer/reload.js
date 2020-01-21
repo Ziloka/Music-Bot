@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const {developers} = require('./../../bot.js');
 
 module.exports = {
     name: "reload",
@@ -13,6 +14,8 @@ module.exports = {
 }
 
 let load = (client, command) => {
+
+    if(developers.find(ID => ID == message.author.id) == undefined) return;
 
     let commands = client.commands.values()
     if(command){

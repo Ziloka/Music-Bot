@@ -1,19 +1,6 @@
-const Discord = require('discord.js');
-const klaw = require('klaw');
-const fileSync = require('fs-sync');
-const {prefix, developers} = require('./botconfig.json');
-const client = new Discord.Client();
-client.categories = [];
-client.commands = new Discord.Collection();
-client.aliases = new Discord.Collection();
-client.queue = new Discord.Collection();
-require('dotenv').config();
-require('./functions.js')(client, klaw, fileSync)
+require('dotenv').config()
+const { ShardingManager } = require('discord.js');
+const manager = new ShardingManager('./bot.js', { respawn: false , token: process.env.TOKEN });
 
-client.login(process.env.TOKEN)
-
-module.exports = {
-    client: client,
-    prefix: prefix,
-    developers: developers
-}
+manager.spawn();
+manager.on('launch', shard => {console.log(`Launched shard ${shard.id}`)});

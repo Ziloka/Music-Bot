@@ -3,27 +3,29 @@ const sqlite3 = require('sqlite3').verbose();
 
 module.exports = {
     name: "playlist",
-    usage: "playlist <private or public> <playlist name>",
+    usage: "playlist <create or delete || Or playlist name> <private or public> <playlist name>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
     
         if(args[0] == "create"){
             let privateOrNot = ['public', 'private']
-            if(client.queue.has(message.guild.id) == false) return message.channel.send('Nothing is currently playing!\n When something is playing and you execute this command the queue will be placed')
-            let isPrivate = privateOrNot.find(word => word == args[0])
+            let songs = (client.queue.has(message.guild.id) == true) ? client.queue.get(message.guild.id).queue : null
+            let isPrivate = privateOrNot.find(word => word.toLowerCase() == args[1].toLowerCase())
             if(isPrivate == undefined) return message.channel.send(`That is a invalid category, choose ${privateOrNot.join(' or ')}`)
-            if(args[1] == undefined) return message.channel.send('You can\'t name the playlist Nothing!')
+            if(args[2] == undefined) return message.channel.send('You can\'t name the playlist Nothing!')
             let db = new sqlite3.Database('./music.db', (err) => {
                 if(err) console.error(err.message)
             })
-            db.run(`INSERT INTO playlist(${isPrivate}_${message.author.id}_${args[0]}) VALUES(${client.queue.get(message.guild.id).queue})`,['C'], function(err){
+            db.run(`INSERT INTO playlist(${isPrivate}_${message.author.id}_${args[1]}_${args[2]}) VALUES(${songs})`,['C'], function(err){
                 if(err) return console.error(err.message)
                 console.log(`A row has been inserted with the row ID ${this.lastID}`)
             })
             db.close()
         } else if(args[0] == 'delete'){
 
+        } else if(args[0] == ''){
+            
         }
 
     }

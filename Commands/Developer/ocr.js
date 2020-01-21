@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const tesseract = require('tesseract.js');
-const {developers} = require('../../index.js');
+const {developers} = require('../../bot.js');
 
 module.exports = {
     name: "ocr",
