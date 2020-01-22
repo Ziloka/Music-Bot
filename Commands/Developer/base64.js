@@ -6,6 +6,7 @@ const path = require('path')
 module.exports = {
     name: "base64",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "encodes or decodes whatever is given",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 

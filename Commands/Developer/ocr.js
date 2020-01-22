@@ -5,6 +5,7 @@ const {developers} = require('../../bot.js');
 module.exports = {
     name: "ocr",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "Optical Character reading",
     argRequirements: args => !!args.length,
     run: async (client, message, args) => {
 

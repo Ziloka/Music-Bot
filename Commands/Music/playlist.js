@@ -3,8 +3,9 @@ const sqlite3 = require('sqlite3').verbose();
 
 module.exports = {
     name: "playlist",
-    usage: "playlist <create or delete || Or playlist name> <private or public> <playlist name>",
+    usage: "playlist <create or delete> <private or public> <playlist name>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "Coming Soon!",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
     
@@ -25,7 +26,7 @@ module.exports = {
         } else if(args[0] == 'delete'){
 
         } else if(args[0] == ''){
-            
+
         }
 
     }

@@ -7,6 +7,7 @@ module.exports = {
     name: "eval",
     usage: "eval <code>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "evaulates stuff in javascript",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
@@ -19,6 +20,9 @@ module.exports = {
         let hrDiff = process.hrtime(hrStart)
 
         try{
+            // (async () => {
+            // })()
+            // Use this in your code to do stuff asynchronously!
             let evaled = new Discord.RichEmbed();
             evaled.setTitle('Evaluation')
             evaled.setColor('#CDDC39')

@@ -7,6 +7,7 @@ module.exports = {
   usage: "play <song name or url>",
   aliases: ['search'],
   category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+  description: "plays a song from youtube",
   argRequirements: args => !args.length,
   run: async (client, message, args, matchedPrefix) => {
 
@@ -23,7 +24,9 @@ module.exports = {
         if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
         let url = args.join(' ');
         let data = client.queue.get(message.guild.id)
-        let info = await ytdl.getInfo(url)
+        let info = await ytdl.getInfo(url).catch(e => {})
+        if(info == undefined) return message.channel.send('I cannot play this link! choose another one!')
+        console.log(info)
         return addToQueue(client, message, args, info, data, url)
       } else {
         return searchYTOnce(client, message, args)

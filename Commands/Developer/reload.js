@@ -4,6 +4,7 @@ const {developers} = require('./../../bot.js');
 module.exports = {
     name: "reload",
     client: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "reloads the command",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 

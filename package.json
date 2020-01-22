@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "child_process": "^1.0.2",
+    "commander": "^4.1.0",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "fs-sync": "^1.0.6",

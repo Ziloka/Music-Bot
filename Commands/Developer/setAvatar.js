@@ -5,6 +5,7 @@ module.exports = {
     name: "setavatar",
     usage: "setavatar <attachment>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "sets the bot avatar",
     argRequirements: args => !!args.length,
     run: async (client, message, args) => {
 

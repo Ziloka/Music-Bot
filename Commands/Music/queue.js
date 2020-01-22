@@ -4,6 +4,7 @@ module.exports = {
     name: "queue",
     usage: "queue",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    description: "displays the queue",
     argRequirements: args => !!args.length,
     run: async (client, message, args) => {
 
