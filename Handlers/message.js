@@ -6,7 +6,6 @@ client.on('message', async message => {
 
     if(message.author.bot) return;
     let prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
-    message.content = message.content.toLowerCase()
     if(!prefixRegex.test(message.content)) return;
 
     let [, matchedPrefix] = message.content.match(prefixRegex);

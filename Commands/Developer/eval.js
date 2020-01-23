@@ -14,7 +14,7 @@ module.exports = {
     if(developers.find(ID => ID == message.author.id) == undefined) return;
 
     try{
-        let evaluateThis = args.join(' ');
+        let evaluateThis = args.join(' ')
         let evaluation = await util.inspect(eval(evaluateThis))
         let hrStart = process.hrtime()
         let hrDiff = process.hrtime(hrStart)

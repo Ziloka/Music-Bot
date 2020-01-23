@@ -18,7 +18,7 @@ module.exports = {
     let command = someArgs.shift().toLowerCase();
 
     if(command == "search"){
-      return searchYTMultipleVideos(client, message, args)
+      return searchMultipleYTVideos(client, message, args)
     } else {
       if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
         if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
@@ -26,7 +26,6 @@ module.exports = {
         let data = client.queue.get(message.guild.id)
         let info = await ytdl.getInfo(url).catch(e => {})
         if(info == undefined) return message.channel.send('I cannot play this link! choose another one!')
-        console.log(info)
         return addToQueue(client, message, args, info, data, url)
       } else {
         return searchYTOnce(client, message, args)
@@ -36,7 +35,7 @@ module.exports = {
   }
 };
 
-async function searchYTMultipleVideos(client, message, args){
+async function searchMultipleYTVideos(client, message, args){
   
   yt(args.join(' '), async (err, res) => {
     if(err) return message.channel.send('An error occurred, please try again!')
@@ -166,11 +165,9 @@ async function finish(client, data, message) {
       play(client, data, message)
     }
   } else if(data.loopQueue == true){
-    // has issue here
     let currentSongs = data.playQueueSongs
     data.queue.shift()
     if(data.queue.length == 0) data.queue.push(currentSongs);
-    //undefined
     data.queue = data.queue[0]
     play(client, data, message)
   }
