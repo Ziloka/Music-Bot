@@ -6,7 +6,7 @@ RUN mkdir -p /usr/src/bot
 WORKDIR /usr/src/bot
 
 COPY package.json /usr/src/bot
-RUN apt-get update && apt-get install -y apt-transport-https apt-utils
+RUN apt-get update && apt-get install -y apt-transport-https apt-utils nodejs
 RUN apt-get install -y ffmpeg
 RUN apt-get install python3.5
 RUN npm install
