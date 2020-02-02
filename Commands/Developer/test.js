@@ -1,22 +1,17 @@
 const Discord = require('discord.js');
-const ytdl = require('ytdl-core');
-const {developers} = require('../../bot.js');
-let map = new Map();
+const asciiArt = require('ascii-art');
 
 module.exports = {
-    name:"test",
-    usage: "test",
+    name: "test",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
-    description: "test command",
-    argRequirements: args => !!args.length,
+    path: __filename,
+    description: "test",
+    argRequirements: args => !args.length,
     run: async (client, message, args) => {
-        
-        if(developers.find(ID => ID == message.author.id) == undefined) return;
-       try{
-            client.queue.get(message.guild.id).dispatcher.emit('end')
-       }catch(e){
-           return message.channel.send(e.message)
-       }
+
+        asciiArt.font
+
+        return message.channel.send(`\`\`\`js\n\`\`\``)
 
     }
 }

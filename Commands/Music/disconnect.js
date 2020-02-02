@@ -4,6 +4,7 @@ module.exports = {
     name: "disconnect",
     usage: "disconnect",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "disconnects from the voice channel",
     argRequirements: args => !!args.length,
     run: async (client, message, args) => {

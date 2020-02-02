@@ -6,6 +6,7 @@ module.exports = {
   name: "search",
   usage: "search <song name or url>",
   category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+  path: __filename,
   description: "searches a song from youtube",
   blackListed: true,
   argRequirements: args => !args.length,

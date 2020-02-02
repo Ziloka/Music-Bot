@@ -2,6 +2,7 @@ module.exports = {
     name: "loop",
     usage: "loop <song or queue>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "loops the current song or queue",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {

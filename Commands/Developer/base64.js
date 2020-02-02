@@ -1,16 +1,16 @@
 const Discord = require('discord.js');
 const Base64 = require('js-base64').Base64;
-const {developers} = require('../../bot.js');
 const path = require('path')
 
 module.exports = {
     name: "base64",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "encodes or decodes whatever is given",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
-        if(developers.find(ID => ID == message.author.id) == undefined) return;
+        if(client.developers.find(ID => ID == message.author.id) == undefined) return;
 
         let choices = ['encode', 'decode']
         if(choices.find(name => name == args[0]) == undefined) return message.channel.send(`The valid categories are:\n${choices.join('\n')}`)

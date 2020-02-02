@@ -3,6 +3,8 @@ const klaw = require('klaw');
 const fileSync = require('fs-sync');
 const {prefix, developers} = require('./botconfig.json');
 const client = new Discord.Client();
+client.prefix = prefix
+client.developers = developers
 client.categories = [];
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -14,6 +16,5 @@ client.login(process.env.TOKEN).catch(e => {console.log(e)})
 
 module.exports = {
     client: client,
-    prefix: prefix,
-    developers: developers
+    prefix: prefix
 }

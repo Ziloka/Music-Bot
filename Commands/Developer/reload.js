@@ -1,14 +1,14 @@
 const Discord = require('discord.js');
-const {developers} = require('./../../bot.js');
 
 module.exports = {
     name: "reload",
-    client: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "reloads the command",
     argRequirements: args => false,
     run: async (client, message, args) => {
 
-        if(developers.find(ID => ID == message.author.id) == undefined) return;
+        if(client.developers.find(ID => ID == message.author.id) == undefined) return;
         if(args.length == 1) load(client, message, args[0])
         else load(client, message);
 

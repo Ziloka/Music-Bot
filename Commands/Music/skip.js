@@ -2,6 +2,7 @@ module.exports = {
     name: "skip",
     usage: "skip",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "skips the current song",
     argRequirements: args => !!args.length,
     run: async (client , message, args) => {

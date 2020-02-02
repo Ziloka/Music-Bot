@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const ytdl = require("ytdl-core");
+const ytpl = require('ytpl');
 const yt = require("yt-search");
 
 module.exports = {
@@ -7,6 +8,7 @@ module.exports = {
   usage: "play <song name or url>",
   aliases: ['search'],
   category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+  path: __filename,
   description: "plays a song from youtube",
   argRequirements: args => !args.length,
   run: async (client, message, args, matchedPrefix) => {
@@ -20,16 +22,7 @@ module.exports = {
     if(command == "search"){
       return searchMultipleYTVideos(client, message, args)
     } else {
-      if (args.join(" ").match(/^https?:\/\/(www.youtube.com|youtube.com)/)) {
-        if(ytdl.validateURL(args.join(' ')) == false) return message.channel.send('That is not a valid URL');
-        let url = args.join(' ');
-        let data = client.queue.get(message.guild.id)
-        let info = await ytdl.getInfo(url).catch(e => {})
-        if(info == undefined) return message.channel.send('I cannot play this link! choose another one!')
-        return addToQueue(client, message, args, info, data, url)
-      } else {
         return searchYTOnce(client, message, args)
-      }
     }
 
   }
@@ -94,7 +87,8 @@ async function addToQueue(client, message, args, info, data, url){
       loopQueue: false,
       loopSong: false,
       playedLoopedSong: null,
-      playQueueSongs: []
+      playQueueSongs: [],
+      volume: 1
     };
     client.queue.set(message.guild.id, data);
   }
@@ -129,11 +123,13 @@ async function play(client, data, message) {
     data.queue[0].requester.displayAvatarURL
   );
 
+  console.log(data.queue[0].url)
+
   data.channel.send({ embed: playing });
   data.dispatcher = await data.connection.playStream(
     ytdl(data.queue[0].url, { filter: "audioonly" })
   );
-  data.dispatcher.setVolume(1)
+  data.dispatcher.setVolume(data.volume)
   data.dispatcher.guildID = data.guildID;
   data.dispatcher.on("end", () => {
     finish(client, data, message);

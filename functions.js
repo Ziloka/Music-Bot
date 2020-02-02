@@ -1,5 +1,18 @@
 module.exports = (client, klaw, fileSync) => {
 
+    let methods = [];
+    klaw('./Utils').on('readable', function(){
+        let item;
+        while(item = this.read()){
+            methods.push(item.path)
+        }
+    }).on('end', function(){
+        methods.forEach(filePath => {
+            if(filePath.endsWith('.js') == false || fileSync.isDir(filePath) == true) return;
+            require(filePath)
+        })
+    })
+
     let items = [];
     klaw('./Commands').on('readable', function(){
         let item;
@@ -9,17 +22,13 @@ module.exports = (client, klaw, fileSync) => {
     }).on('end', function(){
         items.forEach(file => {
             if(fileSync.isDir(file) == true){
-                if(file.endsWith('.js') == true) return;
-                if(file.endsWith("Commands")) return;
-                if(file.includes("Commands") == false) return;
+                if(file.endsWith('.js') == true || file.endsWith("Commands") || file.includes('Commands') == false) return;
                 let category = file.slice(file.lastIndexOf("\\")).slice(1)
-                client.categories.push(`${category}`)
+                client.categories.push(category)
             } else if(file.endsWith('.js')){
-                if(file.endsWith('.js') == false) return;
-                if(fileSync.isDir(file) == true) return;
+                if(file.endsWith('.js') == false || fileSync.isDir(file) == true) return;
                 let prop = require(file)
                 if(prop.blackListed == true) return;
-                prop.path = file
                 client.commands.set(prop.name, prop)
                 if(prop.aliases == undefined) return;
                 prop.aliases.forEach(alias => {
@@ -35,13 +44,12 @@ module.exports = (client, klaw, fileSync) => {
     klaw('./Handlers').on('readable', function(){
         let item;
         while(item = this.read()){
-            items.push(item.path)
+            handlerItems.push(item.path)
         }
     }).on('end', function(){
         handlerItems.forEach(file => {
-            if(file.endsWith('.js') == false) return;
-            if(fileSync.isDir(file) == true) return;
-            require(file)
+            if(file.endsWith('.js') == false || fileSync.isDir(file) == true) return;
+            require(file)(client);
         })
     })
 
@@ -49,13 +57,12 @@ module.exports = (client, klaw, fileSync) => {
     klaw('./Events').on('readable', function(){
         let item;
         while(item = this.read()){
-            items.push(item.path)
+            eventItems.push(item.path)
         }
     }).on('end', function(){
         eventItems.forEach(file => {
-            if(file.endsWith('.js') == false) return;
-            if(fileSync.isDir(file) == true) return;
-            require(file)
+            if(file.endsWith('.js') == false || fileSync.isDir(file) == true) return;
+            require(file)(client);
         })
     })
 

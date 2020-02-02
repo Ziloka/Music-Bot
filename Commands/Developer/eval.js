@@ -1,17 +1,17 @@
 const Discord = require('discord.js');
 const util = require('util');
 const fetch = require('node-fetch');
-const {developers} = require('../../bot.js');
 
 module.exports = {
     name: "eval",
     usage: "eval <code>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
+    path: __filename,
     description: "evaulates stuff in javascript",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
-    if(developers.find(ID => ID == message.author.id) == undefined) return;
+    if(client.developers.find(ID => ID == message.author.id) == undefined) return;
 
     try{
         let evaluateThis = args.join(' ')
@@ -23,6 +23,8 @@ module.exports = {
             // (async () => {
             // })()
             // Use this in your code to do stuff asynchronously!
+            // new (require('discord.js').Collection)().set('hello', 'hello').set('nibba', '1234').last()
+            // Use this in your evaluation so can use a constructor!
             let evaled = new Discord.RichEmbed();
             evaled.setTitle('Evaluation')
             evaled.setColor('#CDDC39')
@@ -63,4 +65,14 @@ module.exports = {
     }
 
     }
+}
+
+function getType (item, depth)  {
+    if (item === undefined || item === null) return item;
+    const name = item.constructor.name;
+    if (depth !== 0 && name === 'Array' && item.length) item = `<${[...new Set(item.map(x => this.getType(x, depth - 1)).sort())].join(' | ')}>`;
+    else if (depth !== 0 && name === 'Object' && Object.keys(item).length) item = `<${[...new Set(Object.values(item).map(x => this.getType(x, depth - 1)).sort())].join(' | ')}>`;
+    else return name || 'Anonymous';
+    return name + item.replace(/([a-z]+)(?:<[a-z |]*>)?(?: \| \1<[a-z |]*>)+/gi, 
+        x => `${x.match(/^[a-z]+/i)[0]}<${[...new Set(x.match(/[a-z |]+(?=>)/gi).map(x => x.split(' | ')).flat())].join(' | ')}>`);
 }
