@@ -123,11 +123,12 @@ async function play(client, data, message) {
     data.queue[0].requester.displayAvatarURL
   );
 
-  console.log(data.queue[0].url)
-
   data.channel.send({ embed: playing });
   data.dispatcher = await data.connection.playStream(
-    ytdl(data.queue[0].url, { filter: "audioonly" })
+    ytdl(data.queue[0].url, { 
+      filter: "audioonly",
+      highWaterMark: 1 << 25
+    })
   );
   data.dispatcher.setVolume(data.volume)
   data.dispatcher.guildID = data.guildID;
