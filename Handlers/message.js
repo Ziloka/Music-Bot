@@ -6,7 +6,7 @@ module.exports = (client) => {
     
         if(message.author.bot) return;
         let prefix = client.prefix
-        let prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
+        let prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`,`i`,`g`);
         if(!prefixRegex.test(message.content)) return;
     
         let [, matchedPrefix] = message.content.match(prefixRegex);

@@ -34,31 +34,33 @@ module.exports = {
             evaled.addField('Time it takes to evaulate code', `${hrDiff[0] > 0 ? `${hrDiff[0]}s` : ''}${hrDiff[1]/1000000}ms`)
             evaled.setFooter(`Evaluated by ${message.author.username}`, message.author.displayAvatarURL)
             // message.channel.send(`*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s`:''}${hrDiff[1]/1000000}`)
-            return message.channel.send({embed: evaled})
+            return message.channel.send({embed: evaled}).catch(async e => {
+                if(e.message == "RichEmbed field values may not exceed 1024 characters."){
+                    let options = {
+                        url: "https://hasteb.in",
+                        extension: "js"
+                    }
+                    let res = await fetch(`${options.url}/documents`, {
+                        method: "POST",
+                        body: evaluation,
+                        headers: { "Content-Type": "text/plain" }
+                    })
+                    if(!res.ok) message.channel.send(res.statusText)
+                    res.json().then(newRes => {
+                        let over1024Characters = new Discord.RichEmbed()
+                        over1024Characters.setTitle('Output')
+                        over1024Characters.setDescription(`The output was longer than 1024 characters so I have placed the evaluation in a text storage site:\n ${`https://hasteb.in/${newRes.key}.${options.extension}`}`)
+                        over1024Characters.setFooter(`Evaluated by ${message.author.username}`, message.author.displayAvatarURL)
+                        return message.channel.send({embed: over1024Characters})
+                        
+                    })
+                    
+                } else {
+                    return message.channel.send(e.message)
+                }
+            })
     }catch(e){
-        if(e.message == "RichEmbed field values may not exceed 1024 characters."){
-            let options = {
-                url: "https://hasteb.in",
-                extension: "js"
-            }
-            let res = await fetch(`${options.url}/documents`, {
-                method: "POST",
-                body: evaluation,
-                headers: { "Content-Type": "text/plain" }
-            })
-            if(!res.ok) message.channel.send(res.statusText)
-            res.json().then(newRes => {
-                let over1024Characters = new Discord.RichEmbed()
-                over1024Characters.setTitle('Output')
-                over1024Characters.setDescription(`The output was longer than 1024 characters so I have placed the evaluation in a text storage site:\n ${`https://hasteb.in/${newRes.key}.${options.extension}`}`)
-                over1024Characters.setFooter(`Evaluated by ${message.author.username}`, message.author.displayAvatarURL)
-                return message.channel.send({embed: over1024Characters})
-                
-            })
-            
-        } else {
-            return message.channel.send(e.message)
-        }
+        
     }
     }catch(e){
         return message.channel.send(e.message)

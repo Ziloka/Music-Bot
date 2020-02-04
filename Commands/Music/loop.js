@@ -4,10 +4,10 @@ const fetch = require('node-fetch');
 
 module.exports = {
     name: "loop",
-    usage: "loop",
+    usage: "loop <song or queue>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     path: __filename,
-    description: "loops the song or queue",
+    description: "loops the song or queue (Do it again to undo it)",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 

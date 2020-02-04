@@ -1,22 +1,40 @@
 const Discord = require('discord.js');
-const { URLSearchParams } = require('url');
+const { URLSearchParms } = require('url');
 const fetch = require('node-fetch');
 
 module.exports = {
-    name: "play",
-    usage: "play <keywords>",
+    name: "search",
+    usage: "search <keywords>",
     category: __dirname.slice(__dirname.lastIndexOf("\\")).slice(1),
     path: __filename,
-    description: "plays the most relative song on youtube",
+    description: "resumes the queue",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
 
         if(!message.guild.members.get(client.user.id).hasPermission("CONNECT", "SPEAK", "VIEW_CHANNEL")) return message.channel.send(`I need the permission \`Connect\` to execute this command!`)
         if(message.member.voiceChannel == undefined) return message.channel.send(`Join a voice channel to use this command!`)
-        if(args.join(' ').length == 0) return message.channel.send('Cannot play nothing!')
+        if(args.join(' ').length == 0) return message.channel.send('Can\'t search for nothing!')
         let track = args.join(' ');
-        let [song] = await getSongs(client, `ytsearch: ${track}`)
-        if(!song) return message.channel.send(`No songs found. Try again!`)
+        let songs = await getSongs(client, `ytsearch: ${track}`)
+        if(!songs) return message.channel.send(`No songs found. Try again!`)
+
+        let selectionEmbed = new Discord.RichEmbed()
+        selectionEmbed.setTitle(`Results for ${args.join(' ')}`)
+        selectionEmbed.setDescription(songs.tracks.map((t, i) => `**${i+1}**: ${t.info.title} by ${t.info.author}`).slice(0,10).join('\n'))
+        selectionEmbed.addField(`Choose an ID 1-10`,`Type \`cancel\` to cancel the video selection`)
+        selectionEmbed.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL)
+        message.channel.send({embed: selectionEmbed})
+
+        let response = await message.channel.awaitMessages(message2 => message2.author.id == message.author.id && /10|[1-9]|cancel/.test(message2.content),{
+            max: 1,
+            maxMatches: 1,
+            time: 20000,
+            errors: ['time']
+        })
+
+        let num = parseInt(response.first().content)
+        song = songs.tracks[num - 1]
+
         let player = await client.player.join({
             guild: message.guild.id,
             channel: message.member.voiceChannelID,
@@ -25,6 +43,7 @@ module.exports = {
             selfdeaf: true
         })
         if(!player) return message.channel.send('Could not join');
+
         if(client.queue.get(message.guild.id) == undefined){
             play(client, message, player, song)
         } else {
@@ -35,21 +54,21 @@ module.exports = {
                 return message.channel.send(`${song.info.title} by ${song.info.author} has been added to the queue!`)
             }
         }
+
     }
 }
 
-function getSongs(client, search){
+async function getSongs(client, search){
     let node = client.player.nodes.first();
     let params = new URLSearchParams();
-    params.append("identifier", search);
-    return fetch(`http://${node.host}:${node.port}/loadtracks?${params.toString()}`,
-     { headers: {
-          Authorization: node.password 
-        } 
-    }).then(res => res.json()).then(data => data.tracks).catch(err => {
-        console.error(err);
-        return null;
-    });
+    params.append("identifier", search)
+    let res = await fetch(`http://${node.host}:${node.port}/loadtracks?${params.toString()}`, {
+        headers : {
+            Authorization: node.password
+        }
+    })
+    let data = await res.json()
+    return data
 }
 
 async function play(client, message, player, song){

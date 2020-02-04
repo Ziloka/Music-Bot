@@ -5,8 +5,13 @@ module.exports = (client) => {
 
         if(oldMember.voiceChannel == undefined) return;
         if(client.queue.has(oldMember.guild.id) == false) return;
-        if(oldMember.voiceChannel.members.size > 1) return; 
-        try{client.queue.delete(oldMember.guild.id);oldMember.voiceChannel.leave()}catch(e){return;}
-    
+        if(oldMember.voiceChannel.members.has(client.user.id) == false) return;
+        if(oldMember.voiceChannel.members.size > 1 && oldMember.voiceChannel.members.has(client.user.id)) return;
+        try{
+            client.player.leave(oldMember.guild.id);
+            client.queue.delete(oldMember.guild.id);
+        }catch(e){
+            return;
+        }
     })
 }
