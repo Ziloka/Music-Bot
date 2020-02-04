@@ -6,6 +6,6 @@ module.exports = {
     description: "searches for a song to be played!",
     argRequirements: args => !args.length,
     run: async (client, message, args) => {
-        
+
     }
 }
