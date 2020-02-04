@@ -4,16 +4,23 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "ascii-art": "^2.5.0",
     "chalk": "^3.0.0",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "fs-sync": "^1.0.6",
+    "js-base64": "^2.5.1",
     "klaw": "^3.0.0",
-    "lavalink": "^2.9.0"
+    "lavalink": "^2.9.0",
+    "ms": "^2.1.2",
+    "neko-love.js": "^1.0.4",
+    "node-fetch": "^2.6.0",
+    "tesseract.js": "^2.0.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js && java -jar Lavalink_Build/Lavalink.jar",
+    "lavalink": "java -jar Lavalink_Build/Lavalink.jar"
   },
   "repository": {
     "type": "git",
