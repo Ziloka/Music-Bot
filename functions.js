@@ -66,4 +66,17 @@ module.exports = (client, klaw, fileSync) => {
         })
     })
 
+    // let models = [];
+    // klaw('./Models').on('readable', function(){
+    //     let item;
+    //     while(item = this.read()){
+    //         models.push(item.path)
+    //     }
+    // }).on('end', function(){
+    //     models.forEach(file => {
+    //         if(file.endsWith('.js') == false || fileSync.isDir(file) == true) return;
+    //         require(file)(client);
+    //     })
+    // })
+
 }

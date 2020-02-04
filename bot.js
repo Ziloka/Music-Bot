@@ -1,10 +1,11 @@
 const Discord = require('discord.js');
 const klaw = require('klaw');
 const fileSync = require('fs-sync');
-const {prefix, developers} = require('./botconfig.json');
+const config = require('./botconfig.json');
 const client = new Discord.Client();
-client.prefix = prefix
-client.developers = developers
+client.config = config;
+client.prefix = config.prefix;
+client.developers = config.developers;
 client.categories = [];
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -13,8 +14,3 @@ require('dotenv').config();
 require('./functions.js')(client, klaw, fileSync)
 
 client.login(process.env.TOKEN).catch(e => {console.log(e)})
-
-module.exports = {
-    client: client,
-    prefix: prefix
-}
