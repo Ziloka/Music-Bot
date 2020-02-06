@@ -1,0 +1,33 @@
+{
+  "name": "discord-music-bot",
+  "version": "3.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "ascii-art": "^2.5.0",
+    "chalk": "^3.0.0",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "fs-sync": "^1.0.6",
+    "js-base64": "^2.5.1",
+    "klaw": "^3.0.0",
+    "ms": "^2.1.2",
+    "neko-love.js": "^1.0.4",
+    "node-fetch": "^2.6.0",
+    "tesseract.js": "^2.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "startThis"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/572512230701006851/Music-Bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/572512230701006851/Music-Bot/issues"
+  },
+  "homepage": "https://github.com/572512230701006851/Music-Bot#readme"
+}
