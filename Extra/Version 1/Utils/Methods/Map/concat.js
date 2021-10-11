@@ -1,3 +1,0 @@
-Map.prototype.concat = function(){
-    
-}

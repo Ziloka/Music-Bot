@@ -1,7 +1,0 @@
-{
-    "prefix":"m!",
-    "developers": ["572512230701006851"],
-    "nodes": [
-        { "host":"localhost", "port":8080, "password":"youshallnotpass" }
-    ]
-}

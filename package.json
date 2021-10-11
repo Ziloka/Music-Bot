@@ -4,25 +4,23 @@
   "description": "Discord Music Bot",
   "main": "index.js",
   "dependencies": {
-    "ascii-art": "^2.5.0",
-    "chalk": "^3.0.0",
-    "discord.js": "^11.5.1",
-    "discord.js-lavalink": "^2.2.3",
-    "dotenv": "^8.2.0",
+    "ascii-art": "^1.5.1",
+    "chalk": "^4.1.2",
+    "discord.js": "^13.2.0",
+    "dotenv": "^10.0.0",
+    "erela.js": "^2.3.3",
     "fs-sync": "^1.0.6",
-    "js-base64": "^2.5.1",
-    "klaw": "^3.0.0",
+    "js-base64": "^3.7.2",
+    "klaw": "^4.0.1",
     "moment": "^2.24.0",
     "ms": "^2.1.2",
     "neko-love.js": "^1.0.4",
-    "node-fetch": "^2.6.0",
-    "tesseract.js": "^2.0.2",
-    "url": "^0.11.0"
+    "node-fetch": "^2.6.5",
+    "tesseract.js": "^2.1.5"
   },
-  "devDependencies": {},
   "scripts": {
-    "start": "(node index.js) & java -jar Lavalink_Build/Lavalink.jar",
-    "lavalink": "java -jar Lavalink_Build/Lavalink.jar"
+    "start": "node index.js",
+    "lavalink": "java -jar Lavalink/Lavalink.jar"
   },
   "repository": {
     "type": "git",

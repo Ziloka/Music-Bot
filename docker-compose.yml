@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  music-bot:
+    build: .
+  lavalink:
+    build: ./Lavalink
+    ports:
+      - "2333:2333"

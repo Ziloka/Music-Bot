@@ -1,7 +1,16 @@
+const Discord = require('discord.js');
+const klaw = require('klaw');
+const fileSync = require('fs-sync');
+const config = require('./config.json');
+const client = new Discord.Client();
+client.config = config;
+client.prefix = config.prefix;
+client.developers = config.developers;
+client.categories = [];
+client.commands = new Discord.Collection();
+client.aliases = new Discord.Collection();
+client.queue = new Discord.Collection();
 require('dotenv').config();
-const { ShardingManager } = require('discord.js');
-const manager = new ShardingManager('./bot.js', { token: process.env.TOKEN });
-// const manager = new ShardingManager('./bot.js', { respawn: false , token: process.env.TOKEN });
+require('./functions.js')(client, klaw, fileSync)
 
-manager.spawn().catch(e => { console.log(e) })
-manager.on('launch', shard => { console.log(`Launched shard ${shard.id}`) })
+client.login(process.env.TOKEN).catch(e => {console.log(e)})
