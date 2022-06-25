@@ -15,7 +15,7 @@
     "moment": "^2.24.0",
     "ms": "^2.1.2",
     "neko-love.js": "^1.0.4",
-    "node-fetch": "^2.6.5",
+    "node-fetch": "^2.6.7",
     "tesseract.js": "^2.1.5"
   },
   "scripts": {
